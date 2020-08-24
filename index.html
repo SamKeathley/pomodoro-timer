@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="clock">
+            <div id="timer"></div>
+            <div>
+                <input type="text" id="clock-task" placeholder="Enter your task...">
+            </div>
+            <div id="clock-actions">
+                <button id="start">Start</button>
+                <button id="pause">Pause</button>
+                <button id="stop">Stop</button>
+
+                <div class="input">
+                    <label>Work Duration</label>
+                    <input name="input-work-duration" id="input-work-duration" type="number">
+                </div>
+                <div class="input">
+                    <label>Break Duration</label>
+                    <input name="input-break-duration" id="input-break-duration" type="number">
+                </div>
+            </div>
+            <div id="clock-title">
+                <span>
+                    Changes made here will reflect at the start of the next work / break session
+                </span>
+            </div>
+        </div>
+        <div id="info">
+            <h3>Your Session</h3>
+            <ul id="sessions"></ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
