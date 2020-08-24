@@ -1,6 +1,5 @@
 const timer = document.querySelector('#timer');
 const startButton = document.querySelector('#start');
-const pauseButton = document.querySelector('#pause');
 const stopButton = document.querySelector('#stop');
 let type = 'Work';
 let isClockRunning = false;
@@ -25,23 +24,48 @@ let breakDurationInput = document.querySelector('#input-break-duration');
 workDurationInput.value = '25';
 breakDurationInput.value = '5';
 
-const toggleClock = (reset) => {
+const toggleClock = reset => {
+    togglePlayPauseIcon(reset);
     if (reset) {
         stopClock();
     } else {
+        if (isClockStopped) {
+            setUpdateTimers();
+            isClockStopped = false;
+        }
         if (isClockRunning === true) {
-            // Pause timer
             clearInterval(timer)
             isClockRunning = false;
         } else {
-            // Start Timer
-            isClockRunning = true;
             timer = setInterval(() => {
                 stepDown();
                 displayCurrentTimeLeft();
             }, 1000)
+            isClockRunning = true;
         }
+        showStopIcon();
     }
+}
+
+const togglePlayPauseIcon = reset => {
+    const playIcon = document.querySelector('#play-icon');
+    const pauseIcon = document.querySelector('#pause-icon');
+    if (reset) {
+        if (playIcon.classList.contains('hidden')) {
+            playIcon.classList.remove('hidden')
+        }
+        if (!pauseIcon.classList.contains('hidden')) {
+            pauseIcon.classList.add('hidden')
+        }
+    } else {
+        playIcon.classList.toggle('hidden')
+        pauseIcon.classList.toggle('hidden')
+    }
+}
+
+const showStopIcon = () => {
+    const stopButton = document.querySelector('#stop')
+    stopButton.classList.remove('hidden');
 }
 
 const stepDown = () => {
@@ -54,11 +78,13 @@ const stepDown = () => {
             currentTimeLeft = breakSessionDuration;
             displaSessionLog('Work');
             type = 'Break';
+            setUpdateTimers();
             currentTaskLabel.value = 'Break';
             currentTaskLabel.disabled = true;
         } else {
             currentTimeLeft = workSessionDuration;
             type = 'Work';
+            setUpdateTimers();
             if (currentTaskLabel.value === 'Break') {
                 currentTaskLabel.value = workSessionLabel;
             }
@@ -104,13 +130,16 @@ const displaySessionLog = (type) => {
 }
 
 const stopClock = () => {
+    setUpdateTimers();
     displaySessionLog(type);
     clearInterval(timer);
+    isClockStopped = true;
     isClockRunning = false;
     currentTimeLeft = workSessionDuration;
     displayCurrentTimeLeft();
 
     type = type === 'Work' ? 'Break' : 'Work';
+    timeSpentInCurrentSession = 0;
 }
 
 const setUpdateTimers = () => {
@@ -126,27 +155,22 @@ const setUpdateTimers = () => {
 // Start
 startButton.addEventListener('click', () => {
     toggleClock();
-})
-
-// Pause
-pauseButton.addEventListener('click', () => {
-    toggleClock();
-})
+});
 
 // Stop
 stopButton.addEventListener('click', () => {
     toggleClock(true);
-})
+});
 
 workDurationInput.addEventListener('input', () => {
     updateWorkSessionDuration =
         minuteToSeconds(workDurationInput.value)
-})
+});
 
 breakDurationInput.addEventListener('input', () => {
     updateBreakSessionDuration =
         minuteToSeconds(breakDurationInput.value)
-})
+});
 
 const minuteToSeconds = mins => {
     return mins * 60
